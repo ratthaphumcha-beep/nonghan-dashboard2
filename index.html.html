@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nong Han Smart Water & Health Early Warning System</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Pulse Animation for Live Badge */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .live-pulse {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- ==================== HEADER SECTION ==================== -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Brand & Title -->
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-brand-500 rounded-xl text-white shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-droplet-degree text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                        Nong Han Smart Water & Health Early Warning
+                    </h1>
+                    <p class="text-xs text-slate-400 font-light">
+                        ระบบเฝ้าระวังและพยากรณ์คุณภาพน้ำล่วงหน้าเพื่อสาธารณสุขชุมชน หนองหาร จ.สกลนคร
+                    </p>
+                </div>
+            </div>
+
+            <!-- Real-time Status Badge & Target Stakeholders -->
+            <div class="flex items-center gap-3 flex-wrap justify-end">
+                <div class="flex items-center gap-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-full text-xs">
+                    <span class="relative flex h-2.5 w-2.5">
+                      <span class="live-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    <span class="font-medium text-emerald-400">ระบบเชื่อมต่อ AI Real-time</span>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-users-medical text-brand-500"></i>
+                    <span>หน่วยงาน: สสจ.สกลนคร | รพ.สต. | อสม.</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- STATS OVERVIEW CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                    <i class="fa-solid fa-water text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">ดัชนีน้ำรวม (WQI หนองหาร)</div>
+                    <div class="text-xl font-bold text-slate-800">72.4 <span class="text-xs font-normal text-slate-500">(ปานกลาง)</span></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg">
+                    <i class="fa-solid fa-circle-check text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">พื้นที่คุณภาพน้ำปลอดภัย</div>
+                    <div class="text-xl font-bold text-emerald-600">3 ตำบล</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                <div class="p-3 bg-amber-100 text-amber-600 rounded-lg">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">พื้นที่เฝ้าระวังสุขภาพ</div>
+                    <div class="text-xl font-bold text-amber-600">2 ตำบล</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4 border-l-4 border-l-rose-500">
+                <div class="p-3 bg-rose-100 text-rose-600 rounded-lg">
+                    <i class="fa-solid fa-radiation text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">พื้นที่เตือนภัยอันตราย</div>
+                    <div class="text-xl font-bold text-rose-600">1 ตำบล</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 1: TRAFFIC LIGHT WATER STATUS ==================== -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-traffic-light text-brand-500"></i>
+                        ส่วนที่ 1: สถานะคุณภาพน้ำรายตำบลรอบหนองหาร (สัญญาณไฟจราจรสุขภาพ)
+                    </h2>
+                    <p class="text-xs text-slate-500">ตรวจวัดค่าออกซิเจนละลาย (DO) และปริมาณแบคทีเรียเพื่อการเฝ้าระวังโรคทางน้ำ</p>
+                </div>
+
+                <!-- Status Filter Buttons -->
+                <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg text-xs font-medium">
+                    <button onclick="filterStatus('all', this)" class="filter-btn px-3 py-1.5 rounded-md bg-white shadow-xs font-bold text-slate-700 transition-all">ทั้งหมด</button>
+                    <button onclick="filterStatus('red', this)" class="filter-btn px-3 py-1.5 rounded-md text-rose-700 hover:bg-rose-50 transition-all">อันตราย (1)</button>
+                    <button onclick="filterStatus('yellow', this)" class="filter-btn px-3 py-1.5 rounded-md text-amber-700 hover:bg-amber-50 transition-all">เฝ้าระวัง (2)</button>
+                    <button onclick="filterStatus('green', this)" class="filter-btn px-3 py-1.5 rounded-md text-emerald-700 hover:bg-emerald-50 transition-all">ปลอดภัย (3)</button>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="tambonContainer">
+                
+                <!-- CARD 1: RED (Danger) -->
+                <div class="tambon-card red-card border border-rose-200 bg-rose-50/30 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-rose-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> อันตราย
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-rose-500 shadow-sm shadow-rose-300 mt-1 flex-shrink-0 animate-pulse"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.ท่าแร่</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: บริเวณท่าเรือและชุมชนริมน้ำ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-rose-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-rose-600 font-bold text-sm">2.1 mg/L</span>
+                            <span class="text-[10px] text-slate-400 font-light block">(เกณฑ์ต่ำกว่า 3.0)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-rose-600 font-bold text-sm">4,500 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-rose-500 font-medium block">เกินเกณฑ์มาตรฐานสูง</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-rose-100/70 p-2.5 rounded-lg text-xs text-rose-900 border border-rose-200">
+                        <div class="font-semibold flex items-center gap-1 text-rose-800 mb-1">
+                            <i class="fa-solid fa-user-doctor"></i> คำแนะนำ สสจ. / รพ.สต.:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">งดใช้น้ำอุปโภคบริโภคโดยตรง หลีกเลี่ยงการสัมผัสน้ำ อสม. ลงพื้นที่แจกจ่ายคลอรีนและเฝ้าระวังผู้ป่วยอุจจาระร่วง</p>
+                    </div>
+                </div>
+
+                <!-- CARD 2: YELLOW (Warning) -->
+                <div class="tambon-card yellow-card border border-amber-200 bg-amber-50/30 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> เฝ้าระวัง
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-amber-500 shadow-sm shadow-amber-300 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.เชียงเครือ</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: ปากน้ำคลองโพนยางคำ</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-amber-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-amber-600 font-bold text-sm">4.2 mg/L</span>
+                            <span class="text-[10px] text-slate-400 font-light block">(เกณฑ์เฝ้าระวัง 4.0-5.0)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-amber-600 font-bold text-sm">1,800 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-amber-600 font-medium block">มีแนวโน้มเพิ่มขึ้น</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-100/70 p-2.5 rounded-lg text-xs text-amber-900 border border-amber-200">
+                        <div class="font-semibold flex items-center gap-1 text-amber-800 mb-1">
+                            <i class="fa-solid fa-hand-holding-medical"></i> คำแนะนำ สสจ. / รพ.สต.:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">ควรต้มน้ำก่อนการอุปโภค เฝ้าระวังผื่นคันและโรคผิวหนังในกลุ่มเกษตรกรจับสัตว์น้ำ</p>
+                    </div>
+                </div>
+
+                <!-- CARD 3: YELLOW (Warning) -->
+                <div class="tambon-card yellow-card border border-amber-200 bg-amber-50/30 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> เฝ้าระวัง
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-amber-500 shadow-sm shadow-amber-300 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.โพนนาแก้ว</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: ศูนย์ประมงรอบนอก</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-amber-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-amber-600 font-bold text-sm">4.8 mg/L</span>
+                            <span class="text-[10px] text-slate-400 font-light block">(ระดับพอใช้)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-amber-600 font-bold text-sm">1,200 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-slate-400 font-light block">(เริ่มสะสมตัว)</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-100/70 p-2.5 rounded-lg text-xs text-amber-900 border border-amber-200">
+                        <div class="font-semibold flex items-center gap-1 text-amber-800 mb-1">
+                            <i class="fa-solid fa-hand-holding-medical"></i> คำแนะนำ สสจ. / รพ.สต.:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">รพ.สต. ติดตามกลุ่มเสี่ยงผู้สูงอายุ ประชาสัมพันธ์งดลงเล่นน้ำบริเวณปากลำห้วย</p>
+                    </div>
+                </div>
+
+                <!-- CARD 4: GREEN (Safe) -->
+                <div class="tambon-card green-card border border-emerald-200 bg-emerald-50/20 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-shield-check mr-1"></i> ปลอดภัย
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-emerald-500 shadow-sm shadow-emerald-300 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.ม่วงไข่</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: สถานีวัดคุณภาพน้ำกลางหนอง</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-emerald-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-emerald-600 font-bold text-sm">6.5 mg/L</span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">(อยู่ในเกณฑ์ดีมาก)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-emerald-600 font-bold text-sm">250 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">อยู่ในเกณฑ์ปลอดภัย</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-100/70 p-2.5 rounded-lg text-xs text-emerald-900 border border-emerald-200">
+                        <div class="font-semibold flex items-center gap-1 text-emerald-800 mb-1">
+                            <i class="fa-solid fa-circle-check"></i> คำแนะนำสุขภาพ:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">คุณภาพน้ำปกติ สามารถทำกิจกรรมทางน้ำและสัญจรได้ตามปกติ</p>
+                    </div>
+                </div>
+
+                <!-- CARD 5: GREEN (Safe) -->
+                <div class="tambon-card green-card border border-emerald-200 bg-emerald-50/20 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-shield-check mr-1"></i> ปลอดภัย
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-emerald-500 shadow-sm shadow-emerald-300 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.นาตม</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: ชุมชนฝั่งทิศตะวันออก</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-emerald-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-emerald-600 font-bold text-sm">6.8 mg/L</span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">(อยู่ในเกณฑ์ดีมาก)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-emerald-600 font-bold text-sm">120 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">อยู่ในเกณฑ์ปลอดภัย</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-100/70 p-2.5 rounded-lg text-xs text-emerald-900 border border-emerald-200">
+                        <div class="font-semibold flex items-center gap-1 text-emerald-800 mb-1">
+                            <i class="fa-solid fa-circle-check"></i> คำแนะนำสุขภาพ:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">คุณภาพน้ำอยู่ในระดับมาตรฐานดี ประชาชนสามารถใช้น้ำดิบผลิตประปาได้ปกติ</p>
+                    </div>
+                </div>
+
+                <!-- CARD 6: GREEN (Safe) -->
+                <div class="tambon-card green-card border border-emerald-200 bg-emerald-50/20 rounded-xl p-4 relative overflow-hidden hover:shadow-md transition">
+                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
+                        <i class="fa-solid fa-shield-check mr-1"></i> ปลอดภัย
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-4 h-4 rounded-full bg-emerald-500 shadow-sm shadow-emerald-300 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">ต.เหล่าหลวง</h3>
+                            <p class="text-xs text-slate-500">จุดตรวจ: สถานีวัดทิศใต้</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 my-3 bg-white p-3 rounded-lg border border-emerald-100 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">ออกซิเจนละลาย (DO)</span>
+                            <span class="text-emerald-600 font-bold text-sm">7.0 mg/L</span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">(อยู่ในเกณฑ์ดีมาก)</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">แบคทีเรีย (E. coli)</span>
+                            <span class="text-emerald-600 font-bold text-sm">90 <span class="text-[10px]">MPN/100ml</span></span>
+                            <span class="text-[10px] text-emerald-600 font-medium block">อยู่ในเกณฑ์ปลอดภัย</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-100/70 p-2.5 rounded-lg text-xs text-emerald-900 border border-emerald-200">
+                        <div class="font-semibold flex items-center gap-1 text-emerald-800 mb-1">
+                            <i class="fa-solid fa-circle-check"></i> คำแนะนำสุขภาพ:
+                        </div>
+                        <p class="text-[11px] leading-relaxed">สภาพแวดล้อมน้ำสมบูรณ์ ไม่มีปัจจัยเสี่ยงต่อสาธารณสุข</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 2: PREDICTIVE CHART ==================== -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line-up text-brand-500"></i>
+                        ส่วนที่ 2: กราฟพยากรณ์คุณภาพน้ำล่วงหน้า 1-3 วัน (AI Environmental Predictive Chart)
+                    </h2>
+                    <p class="text-xs text-slate-500">วิเคราะห์ทิศทางลม ปริมาณฝน และการชะล้างสารอาหารที่จะส่งผลต่อค่าออกซิเจน (DO) ใน 72 ชั่วโมงข้างหน้า</p>
+                </div>
+
+                <!-- Info Pill -->
+                <div class="flex items-center gap-2 text-xs bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-slate-600">
+                    <i class="fa-solid fa-wind text-brand-500"></i>
+                    <span>ทิศทางลมปัจจุบัน: <strong>ตะวันตกเฉียงเหนือ (14 กม./ชม.)</strong></span>
+                </div>
+            </div>
+
+            <!-- AI Insight Alert Box -->
+            <div class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs text-amber-900 flex items-start gap-3">
+                <i class="fa-solid fa-brain-circuit text-amber-600 text-lg mt-0.5"></i>
+                <div>
+                    <span class="font-bold text-amber-900 block text-sm">การพยากรณ์จากแบบจำลอง AI (สสจ. & รพ.สต. ควรเฝ้าระวัง):</span>
+                    <p class="mt-0.5">ในอีก 48 ชั่วโมงข้างหน้า คาดการณ์ปริมาณฝนตกหนัก 65 มม. ประกอบกับทิศทางลมพัดสารอาหารและตะกอนจากลำห้วยไหลลงสู่หนองหารฝั่ง ต.ท่าแร่ และ ต.เชียงเครือ ส่งผลให้ค่า DO มีแนวโน้มลดลงแตะระดับวิกฤต (< 2.0 mg/L) ขอให้ อสม. เตรียมพร้อมเตือนภัยประชาชนเรื่องน้ำอุปโภค</p>
+                </div>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="w-full h-80 relative">
+                <canvas id="predictiveChart"></canvas>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 3: PUBLIC ALERT & HEALTH SERVICES ==================== -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left 2 Columns: Citizen Quick Water Safety Check -->
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-mobile-screen-button text-brand-500"></i>
+                            ส่วนที่ 3: ช่องทางตรวจสอบสถานะน้ำสำหรับประชาชน (Public Water Alert)
+                        </h2>
+                        <span class="text-[11px] bg-brand-50 text-brand-700 font-semibold px-2.5 py-1 rounded-full border border-brand-200">
+                            บริการประชาชน
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-5">เลือกพื้นที่หรือตำบลที่คุณอาศัยอยู่ เพื่อตรวจสอบความปลอดภัยของน้ำอุปโภค/บริโภค ประจำวัน</p>
+
+                    <!-- Interactive Selector -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">เลือกตำบลของคุณ:</label>
+                            <select id="userTambonSelect" onchange="checkPublicWater()" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="tharae">ต.ท่าแร่ (โซนริมหนองหาร)</option>
+                                <option value="chiangkhruea">ต.เชียงเครือ (โซนปากน้ำ)</option>
+                                <option value="phonnakaeo">ต.โพนนาแก้ว</option>
+                                <option value="muangkai">ต.ม่วงไข่</option>
+                                <option value="natom">ต.นาตม</option>
+                                <option value="laoluang">ต.เหล่าหลวง</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="checkPublicWater()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm py-2.5 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i> ตรวจสอบ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Dynamic Result Display Box -->
+                    <div id="publicResultBox" class="p-4 rounded-xl bg-slate-100 border border-slate-200 transition-all">
+                        <div class="flex items-start gap-3">
+                            <div id="resIcon" class="p-2.5 rounded-lg bg-rose-500 text-white text-xl">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h4 id="resTitle" class="font-bold text-slate-800 text-sm">ต.ท่าแร่: เตือนภัยคุณภาพน้ำอยู่ในระดับอันตราย</h4>
+                                <p id="resDesc" class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                    หลีกเลี่ยงการใช้น้ำดิบจากหนองหารโดยตรงเพื่อการสรงน้ำหรืออุปโภค ควรกรองและต้มสุกก่อนใช้งานทุกครั้ง หากมีอาการผื่นคันหรือถ่ายท้อง ควรรีบพบแพทย์ที่ รพ.สต. ท่าแร่
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action buttons for public -->
+                <div class="grid grid-cols-2 gap-3 mt-6 pt-4 border-t border-slate-100">
+                    <button onclick="alert('ระบบกำลังส่งพิกัดแจ้งเหตุการณ์น้ำเสียไปยัง สสจ. และ รพ.สต. ในพื้นที่')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2.5 px-3 rounded-lg border border-slate-300 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-rose-500"></i> รายงานคราบน้ำเสีย / ผักตบชวา
+                    </button>
+                    <button onclick="alert('สายด่วนสาธารณสุข สสจ.สกลนคร: 042-711-234 (บริการ 24 ชม.)')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2.5 px-3 rounded-lg border border-slate-300 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-phone-office text-brand-600"></i> สายด่วน รพ.สต. / สสจ.
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right 1 Column: Health Guidelines for Aosorm & Health Officers -->
+            <div class="bg-slate-900 text-white rounded-2xl shadow-sm p-5 md:p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="p-2 bg-brand-500/20 text-brand-400 rounded-lg">
+                            <i class="fa-solid fa-kit-medical text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base text-white">แนวปฏิบัติ อสม. & รพ.สต.</h3>
+                            <p class="text-[11px] text-slate-400">คู่มือเฝ้าระวังสุขภาพชุมชนประจำวัน</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3.5 text-xs text-slate-300">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-dot text-brand-400 text-[10px] mt-1"></i>
+                            <span><strong>การเฝ้าระวังผู้ป่วย:</strong> ติดตามสถิติผู้ป่วยอุจจาระร่วงและโรคผิวหนังในหมู่บ้านริมน้ำทุกวันศุกร์</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-dot text-brand-400 text-[10px] mt-1"></i>
+                            <span><strong>สนับสนุนแจกจ่าย:</strong> ประสาน สสจ. จัดสรรหยดทิพย์ (คลอรีนน้ำ) ให้แก่ครัวเรือนที่ใช้น้ำบาดาล/น้ำคลอง</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-dot text-brand-400 text-[10px] mt-1"></i>
+                            <span><strong>กลุ่มเปราะบาง:</strong> ให้คำแนะนำเป็นพิเศษแก่ผู้สูงอายุ เด็กเล็ก และผู้ป่วยเรื้อรังในการบริโภคน้ำสะอาด</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800">
+                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-xs text-slate-300">
+                            <i class="fa-solid fa-file-pdf text-rose-400 text-lg"></i>
+                            <span>แผนคู่มือฉุกเฉิน สสจ.สกลนคร</span>
+                        </div>
+                        <button onclick="alert('กำลังดาวน์โหลดเอกสารคู่มือรับมือวิกฤตน้ำสำหรับ อสม.')" class="text-xs bg-brand-500 hover:bg-brand-600 text-white font-medium px-2.5 py-1.5 rounded-lg transition">
+                            ดาวน์โหลด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 mt-10 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div>
+                © 2026 Hackathon Project: <strong>Nong Han Smart Water & Health Early Warning System</strong>
+            </div>
+            <div class="text-slate-400">
+                ร่วมพัฒนาเพื่อระบบสาธารณสุขชุมชน โดย สำนักงานสาธารณสุขจังหวัดสกลนคร (สสจ.) & รพ.สต. รอบหนองหาร
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // --- 1. TRAFFIC LIGHT FILTER LOGIC WITH ACTIVE BUTTON STYLING ---
+        function filterStatus(type, btnElement) {
+            const cards = document.querySelectorAll('.tambon-card');
+            cards.forEach(card => {
+                if (type === 'all') {
+                    card.style.display = 'block';
+                } else if (type === 'red') {
+                    card.style.display = card.classList.contains('red-card') ? 'block' : 'none';
+                } else if (type === 'yellow') {
+                    card.style.display = card.classList.contains('yellow-card') ? 'block' : 'none';
+                } else if (type === 'green') {
+                    card.style.display = card.classList.contains('green-card') ? 'block' : 'none';
+                }
+            });
+
+            // Update active button styling
+            if (btnElement) {
+                const buttons = document.querySelectorAll('.filter-btn');
+                buttons.forEach(btn => btn.classList.remove('bg-white', 'shadow-xs', 'font-bold'));
+                btnElement.classList.add('bg-white', 'shadow-xs', 'font-bold');
+            }
+        }
+
+        // --- 2. PUBLIC WATER CHECKER LOGIC ---
+        const tambonData = {
+            tharae: {
+                title: "ต.ท่าแร่: เตือนภัยคุณภาพน้ำอยู่ในระดับอันตราย (สีแดง)",
+                desc: "งดใช้น้ำดิบจากหนองหารโดยตรงเพื่อการอุปโภคบริโภค หลีกเลี่ยงการสัมผัสน้ำ สสจ. และ รพ.สต. กำลังลงพื้นที่แจกจ่ายคลอรีนฆ่าเชื้อ",
+                bg: "bg-rose-50 border-rose-200",
+                iconBg: "bg-rose-500 text-white",
+                icon: "fa-triangle-exclamation"
+            },
+            chiangkhruea: {
+                title: "ต.เชียงเครือ: คุณภาพน้ำอยู่ในระดับเฝ้าระวัง (สีเหลือง)",
+                desc: "ควรต้มน้ำก่อนการอุปโภคทุกครั้ง ระวังการเกิดโรคผิวหนังและผื่นคันในกลุ่มผู้จับสัตว์น้ำหรือเกษตรกร",
+                bg: "bg-amber-50 border-amber-200",
+                iconBg: "bg-amber-500 text-white",
+                icon: "fa-triangle-exclamation"
+            },
+            phonnakaeo: {
+                title: "ต.โพนนาแก้ว: คุณภาพน้ำอยู่ในระดับเฝ้าระวัง (สีเหลือง)",
+                desc: "พบบริเวณปากลำห้วยมีตะกอนสะสม ควรใช้น้ำประปาหมู่บ้านที่ผ่านการกรองแล้วเท่านั้นในการอุปโภค",
+                bg: "bg-amber-50 border-amber-200",
+                iconBg: "bg-amber-500 text-white",
+                icon: "fa-triangle-exclamation"
+            },
+            muangkai: {
+                title: "ต.ม่วงไข่: คุณภาพน้ำอยู่ในระดับปลอดภัย (สีเขียว)",
+                desc: "คุณภาพน้ำอยู่ในเกณฑ์มาตรฐานดี ประชาชนและชาวประมงสามารถทำกิจกรรมทางน้ำและสัญจรได้ตามปกติ",
+                bg: "bg-emerald-50 border-emerald-200",
+                iconBg: "bg-emerald-500 text-white",
+                icon: "fa-circle-check"
+            },
+            natom: {
+                title: "ต.นาตม: คุณภาพน้ำอยู่ในระดับปลอดภัย (สีเขียว)",
+                desc: "ไม่พบการปนเปื้อนของแบคทีเรียเกินเกณฑ์ น้ำดิบสามารถนำมาใช้นผลิตน้ำประปาได้อย่างปลอดภัย",
+                bg: "bg-emerald-50 border-emerald-200",
+                iconBg: "bg-emerald-500 text-white",
+                icon: "fa-circle-check"
+            },
+            laoluang: {
+                title: "ต.เหล่าหลวง: คุณภาพน้ำอยู่ในระดับปลอดภัย (สีเขียว)",
+                desc: "ดัชนีคุณภาพน้ำ (WQI) อยู่ในเกณฑ์ดี สภาพแวดล้อมน้ำสมบูรณ์ ไม่มีปัจจัยเสี่ยงต่อสาธารณสุข",
+                bg: "bg-emerald-50 border-emerald-200",
+                iconBg: "bg-emerald-500 text-white",
+                icon: "fa-circle-check"
+            }
+        };
+
+        function checkPublicWater() {
+            const val = document.getElementById('userTambonSelect').value;
+            const data = tambonData[val];
+            const box = document.getElementById('publicResultBox');
+            const icon = document.getElementById('resIcon');
+            const title = document.getElementById('resTitle');
+            const desc = document.getElementById('resDesc');
+
+            box.className = `p-4 rounded-xl border transition-all ${data.bg}`;
+            icon.className = `p-2.5 rounded-lg ${data.iconBg} text-xl flex-shrink-0`;
+            icon.innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+            title.innerText = data.title;
+            desc.innerText = data.desc;
+        }
+
+        // --- 3. CHART.JS OPTIMIZED SCALES ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('predictiveChart').getContext('2d');
+            
+            // Gradient for Rain
+            const rainGradient = ctx.createLinearGradient(0, 0, 0, 300);
+            rainGradient.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
+            rainGradient.addColorStop(1, 'rgba(56, 189, 248, 0.05)');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['วันนี้ (ปัจจุบัน)', 'พรุ่งนี้ (+24 ชม.)', '2 วันข้างหน้า (+48 ชม.)', '3 วันข้างหน้า (+72 ชม.)'],
+                    datasets: [
+                        {
+                            label: 'ค่าออกซิเจนละลาย DO คาดการณ์ (mg/L)',
+                            data: [4.8, 3.5, 2.1, 3.8],
+                            borderColor: '#e11d48',
+                            backgroundColor: '#e11d48',
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            type: 'line',
+                            tension: 0.3,
+                            yAxisID: 'yDO' // แยกแกน Y มาฝั่งซ้าย (0-10) เพื่อให้เห็นเส้นกราฟดิ่งลงชัดเจน
+                        },
+                        {
+                            label: 'คาดการณ์ปริมาณฝน (มม.)',
+                            data: [12, 45, 65, 20],
+                            backgroundColor: rainGradient,
+                            borderColor: '#38bdf8',
+                            borderWidth: 1.5,
+                            type: 'bar',
+                            yAxisID: 'yRain', // แกน Y ฝั่งขวา (0-100)
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'ดัชนีสารอาหาร/ความขุ่น (%)',
+                            data: [30, 60, 88, 52],
+                            borderColor: '#f59e0b',
+                            backgroundColor: '#f59e0b',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 3,
+                            type: 'line',
+                            tension: 0.3,
+                            yAxisID: 'yRain' // แกน Y ฝั่งขวา (0-100)
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { family: 'Kanit', size: 12 },
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: { family: 'Kanit' },
+                            titleFont: { family: 'Kanit', weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Kanit', size: 11 } }
+                        },
+                        yDO: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'ค่า DO (mg/L)',
+                                font: { family: 'Kanit', size: 11, weight: 'bold' },
+                                color: '#e11d48'
+                            },
+                            min: 0,
+                            max: 10, // กำหนดขอบเขตให้เส้น DO ขยับขึ้นลงชัดเจน
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: 'Kanit', size: 11 } }
+                        },
+                        yRain: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'ปริมาณฝน (มม.) / สารอาหาร (%)',
+                                font: { family: 'Kanit', size: 11 }
+                            },
+                            min: 0,
+                            max: 100,
+                            grid: { drawOnChartArea: false },
+                            ticks: { font: { family: 'Kanit', size: 11 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
